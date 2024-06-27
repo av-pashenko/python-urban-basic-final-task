@@ -57,8 +57,13 @@ def get_count_house_categories(categories: list[str]) -> dict[str, int]:
     :param categories: Список категорий домов.
     :return: Словарь с количеством домов в каждой категории.
     """
-    unique_categories = set(categories)
-    return {key: len([c for c in categories if c == key]) for key in unique_categories}
+    categories_counted = {}
+    for cat in categories:
+        if cat in categories_counted:
+            categories_counted[cat] += 1
+        else:
+            categories_counted[cat] = 1
+    return categories_counted
 
 
 def min_area_residential(houses: list[dict]) -> str:
@@ -68,9 +73,9 @@ def min_area_residential(houses: list[dict]) -> str:
     :return: Адрес дома с наименьшим средним количеством
     квадратных метров жилой площади на одного жильца.
     """
-    min_avg_area = houses[0]["area_residential"] / houses[0]["population"]
-    min_addr = houses[0]["house_address"]
-    for house in houses[1:]:
+    min_avg_area = float("inf")
+    min_addr = None
+    for house in houses:
         curr_avg_area = house["area_residential"] / house["population"]
         if curr_avg_area < min_avg_area:
             min_avg_area = curr_avg_area
